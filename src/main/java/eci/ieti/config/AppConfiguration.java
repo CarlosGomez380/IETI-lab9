@@ -16,7 +16,7 @@ public class AppConfiguration {
     public MongoDbFactory mongoDbFactory() throws Exception {
 
         MongoClientURI uri = new MongoClientURI(
-                "mongodb+srv://test:test@cluster0-dzkk5.mongodb.net/test?retryWrites=true&w=majority");
+                "mongodb+srv://test:test@lab-9.yv96r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
         MongoClient mongoClient = new MongoClient(uri);
 
