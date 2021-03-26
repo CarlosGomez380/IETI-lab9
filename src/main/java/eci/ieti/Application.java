@@ -1,7 +1,10 @@
 package eci.ieti;
 
+import eci.ieti.config.AppConfiguration;
 import eci.ieti.data.CustomerRepository;
 import eci.ieti.data.ProductRepository;
+import eci.ieti.data.TodoRepository;
+import eci.ieti.data.UserRepository;
 import eci.ieti.data.model.Customer;
 import eci.ieti.data.model.Product;
 
@@ -9,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -20,6 +28,12 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TodoRepository todoRepository;
     
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -59,7 +73,12 @@ public class Application implements CommandLineRunner {
         
         productRepository.findByDescriptionContaining("plus", PageRequest.of(0, 2)).stream()
         	.forEach(System.out::println);
-   
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfiguration.class);
+        MongoOperations mongoOperation = (MongoOperations) applicationContext.getBean("mongoTemplate");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("firstName").is("Alice"));
+
+        Customer customer = mongoOperation.findOne(query, Customer.class);
         System.out.println();
     }
 
